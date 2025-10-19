@@ -31,9 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Archivos temporales del proyecto ###
-ArchivoTemporal.txt
-RESUMEN_IMPLEMENTACION.md
-SPECIES_TESTING_GUIDE.md
-InstruccionesGenomeBank.txt
