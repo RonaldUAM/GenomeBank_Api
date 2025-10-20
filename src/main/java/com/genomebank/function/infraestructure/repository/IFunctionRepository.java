@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface IFunctionRepository extends JpaRepository<Function,String> {
     List<Function> findByCodeAndCategory(String code, Category category);
+    List<Function> findByCategory(Category category);
+    List<Function>findByCode(String code);
+
+
 }

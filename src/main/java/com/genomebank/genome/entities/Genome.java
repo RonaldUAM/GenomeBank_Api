@@ -2,6 +2,7 @@ package com.genomebank.genome.entities;
 
 
 import com.genomebank.chromosome.entities.Chromosome;
+import com.genomebank.specie.entities.Specie;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,10 @@ public class Genome {
     //nullable: No puede estar vacio
     @JoinColumn(name = "id_genome", nullable = false)
     private List<Chromosome> chromosomes;
+
+    @ManyToOne //Muchos genomas pertenecen a una especie
+    @JoinColumn(name ="id_specie", nullable = false)
+    private Specie specie;
 
 
 }

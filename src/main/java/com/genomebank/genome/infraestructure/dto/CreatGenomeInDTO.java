@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CrearinDTO {
+public class CreatGenomeInDTO {
 
    private List<Integer> genome;
 

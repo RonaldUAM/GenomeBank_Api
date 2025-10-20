@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IFunctionService {
-    public List<Function> filtrarFunciones(String code, String category);
-    public boolean eliminarFuncion(String code);
-    public Optional<Function> obtenerFuncionPorId(String code);//Revisar
-    public Function crearFuncion(Function function);
-    Optional<Function> actualizarFuncion(String code, Function function);
+    public List<Function> filterFunctions(String code, String category);
+    public boolean deleteFunction(String code);
+    public Optional<Function> getFunctionById(String code);
+    public Function createFunction(Function function);
+    Optional<Function> updateFunction(String code, Function function);
 
 }

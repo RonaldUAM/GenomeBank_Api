@@ -16,42 +16,42 @@ import java.util.List;
 public class FunctionController {
     private IFunctionService functionService;
 
-
-    @GetMapping("/consultarFunciones")
+    @PreAuthorize("hasAnyRole('USER')")
+    @GetMapping("/filtrar_funciones")
     //@RequestParam nos permite tener el parametro opcional, se puede llamar al endpoin de diferentes formas
     //genomes/consultar_genomas
     //genomes/consultar_genomas?code=G123
     //genomes/consultar_genomas?category=Mamífero
     //genomes/consultar_genomas?code=G123&category=Mamífero
 
-    public ResponseEntity<List<Function>> consultarFuncion(@RequestParam(required = false) String code,
+    public ResponseEntity<List<Function>> filterFunctions(@RequestParam(required = false) String code,
                                                            @RequestParam(required = false) String category) {
 
-        List<Function> functions = functionService.filtrarFunciones(code, category);
+        List<Function> functions = functionService.filterFunctions(code, category);
         return ResponseEntity.ok(functions);
 
     }
 
-
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/consultar/{code}")
-    public ResponseEntity <Function> consultarFuncionId(@PathVariable String code) {
-        return this.functionService.obtenerFuncionPorId(code)
+    public ResponseEntity <Function> getFunctionById(@PathVariable String code) {
+        return this.functionService.getFunctionById(code)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/crear")
-    public ResponseEntity<Function> crearFuncion(@RequestBody Function function) {
-        return ResponseEntity.ok(this.functionService.crearFuncion(function));
+    public ResponseEntity<Function> createFunction(@RequestBody Function function) {
+        return ResponseEntity.ok(this.functionService.createFunction(function));
     }
 
 
 
-    @PreAuthorize("hasRole('ADMIN')") // Solo ADMIN puede crear
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/actualizar/{code}")
-    public ResponseEntity<Function> actualizarFuncionId(@PathVariable String code, @RequestBody Function function) {
-        return this.functionService.actualizarFuncion(code, function)
+    public ResponseEntity<Function> updateFunctionById(@PathVariable String code, @RequestBody Function function) {
+        return this.functionService.updateFunction(code, function)
                 .map(funcionEditada -> ResponseEntity.ok()
                                 .body(funcionEditada))
                 .orElse(ResponseEntity.notFound().build());
@@ -59,12 +59,12 @@ public class FunctionController {
 
 
 
-    @PreAuthorize("hasRole('ADMIN')") // Solo ADMIN puede crear
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{code}")
-    public ResponseEntity<Void> eliminarFuncionId(@PathVariable String code) {
-        boolean eliminar = this.functionService.eliminarFuncion(code);
+    public ResponseEntity<Void> deleteFunctionById(@PathVariable String code) {
+        boolean delete = this.functionService.deleteFunction(code);
 
-        if (eliminar) {
+        if (delete) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

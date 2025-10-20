@@ -2,7 +2,7 @@ package com.genomebank.genome.infraestructure.controller;
 
 import com.genomebank.genome.application.ports.IGenomeService;
 import com.genomebank.genome.entities.Genome;
-import com.genomebank.genome.infraestructure.dto.CrearinDTO;
+import com.genomebank.genome.infraestructure.dto.CreatGenomeInDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +21,19 @@ public class GenomeController {
      * Endpoint para obtener todos los genomas.
      * @return ResponseEntity con la lista de genomas.
      */
-    //Tratar de mejorar para filtrar
+
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/consultar_genoma")
-    public ResponseEntity<List<Genome>> obtenerGenomas(){
-        List<Genome>genomes= genomeService.obtenerGenomas();
+    public ResponseEntity<List<Genome>> filterGenomes(@RequestParam(required = false) Long specieId){
+
+        List<Genome>genomes;
+
+        if (specieId != null) {
+            genomes=genomeService.getGenomesBySpecieId(specieId);
+        }else{
+            genomes=genomeService.getGenomes();
+        }
+
         return ResponseEntity.ok(genomes);
     }
 
@@ -36,9 +44,9 @@ public class GenomeController {
      */
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/consultar_genoma/{id}")
-    public ResponseEntity<Genome> obtenerGenoma(@PathVariable Long id){
+    public ResponseEntity<Genome> getGenomesById(@PathVariable Long id){
 
-        return this.genomeService.obtenerGenomaPorId(id)
+        return this.genomeService.getGenomesById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
 
@@ -51,27 +59,27 @@ public class GenomeController {
      * @param genome El objeto Genoma a crear.
      * @return ResponseEntity con el genoma creado.
      */
-    @PreAuthorize("hasRole('ADMIN')") // Solo ADMIN puede crear
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/crear")
-    public ResponseEntity<Genome> crearGenoma(@RequestBody CrearinDTO crearinDTO){
-        return ResponseEntity.ok(this.genomeService.crearGenoma(crearinDTO));
+    public ResponseEntity<Genome> createGenome(@RequestBody CreatGenomeInDTO creatGenomeInDTO){
+        return ResponseEntity.ok(this.genomeService.createGenome(creatGenomeInDTO));
     }
 
-    @PreAuthorize("hasRole('ADMIN')") // Solo ADMIN puede crear
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<Genome> actualizarGenoma(@PathVariable Long id, @RequestBody Genome genome){
-        return this.genomeService.actualizarGenoma(id, genome)
+    public ResponseEntity<Genome> updateGenome(@PathVariable Long id, @RequestBody Genome genome){
+        return this.genomeService.updateGenome(id, genome)
                 .map(genomaEditado->ResponseEntity.ok()
                         .body(genomaEditado))
                 .orElse(ResponseEntity.notFound().build());
     }
-    @PreAuthorize("hasRole('ADMIN')") // Solo ADMIN puede crear
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{id}")
     //Void hace referencia a que no se devuelve un objeto
-    public ResponseEntity<Void> eliminarGenoma(@PathVariable Long id){
-       boolean eliminar = this.genomeService.eliminarGenoma(id);
+    public ResponseEntity<Void> deleteGenome(@PathVariable Long id){
+       boolean delete = this.genomeService.deleteGenome(id);
        //Validacion
-        if (eliminar){
+        if (delete){
             return ResponseEntity.ok().build();
         }else{
             return ResponseEntity.notFound().build();

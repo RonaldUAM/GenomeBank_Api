@@ -1,8 +1,7 @@
 package com.genomebank.genome.application.service;
 import com.genomebank.chromosome.application.ports.IChromosomeService;
 import com.genomebank.chromosome.entities.Chromosome;
-import com.genomebank.chromosome.infraestructure.controller.dto.CreateinDTO;
-import com.genomebank.genome.infraestructure.dto.CrearinDTO;
+import com.genomebank.genome.infraestructure.dto.CreatGenomeInDTO;
 import com.genomebank.genome.application.ports.IGenomeService;
 import com.genomebank.genome.entities.Genome;
 import com.genomebank.genome.infraestructure.repository.IGenomeRepository;
@@ -20,20 +19,26 @@ public class GenomeService implements IGenomeService {
     private IChromosomeService IChromosomeService;
 
     @Override
-    public List<Genome> obtenerGenomas() {
+    public List<Genome>getGenomes(){
         return this.IGenomeRepository.findAll();
     }
 
+
     @Override
-    public Optional<Genome> obtenerGenomaPorId(Long id) {
+    public List<Genome> getGenomesBySpecieId(Long specieId) {
+        return this.IGenomeRepository.findBySpecieId(specieId);
+    }
+
+    @Override
+    public Optional<Genome> getGenomesById(Long id) {
         return this.IGenomeRepository.findById(id);
     }
 
 
     @Override
-    public Genome crearGenoma(CrearinDTO crearinDTO) {
+    public Genome createGenome(CreatGenomeInDTO creatGenomeInDTO) {
         //Traer la lista de cromosomas
-        List<Integer>idCromosomas=crearinDTO.getGenome();
+        List<Integer>idCromosomas= creatGenomeInDTO.getGenome();
         List<Chromosome> cromosomas=new ArrayList<>();
         for (Integer idCromosoma : idCromosomas) {
 
@@ -51,7 +56,7 @@ public class GenomeService implements IGenomeService {
     }
 
     @Override
-    public Optional<Genome> actualizarGenoma(Long id, Genome genoma) {
+    public Optional<Genome> updateGenome(Long id, Genome genoma) {
         return this.IGenomeRepository.findById(id)
                 .map(genomaEncontrado->{
                     genomaEncontrado.setId(genomaEncontrado.getId());
@@ -60,7 +65,7 @@ public class GenomeService implements IGenomeService {
     }
 
     @Override
-    public boolean eliminarGenoma(Long id) {
+    public boolean deleteGenome(Long id) {
         if (IGenomeRepository.existsById(id)) {
             IGenomeRepository.deleteById(id);
             return true;

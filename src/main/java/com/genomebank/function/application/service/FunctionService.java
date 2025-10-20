@@ -15,47 +15,56 @@ import java.util.Optional;
 public class FunctionService implements IFunctionService {
     private IFunctionRepository functionRepository;
 
-//Buscar
     @Override
-    public List<Function> filtrarFunciones(String code, String category) {
-        //Validar si se encuentra o no el ENUM, sino lanza excepcion
-        Category categoria=Category.fromValue(category).orElseThrow(() -> new RuntimeException("x"));
+    public List<Function> filterFunctions(String code, String category) {
+
 
         if (code!=null && category!=null){
+            //Validar si se encuentra o no el ENUM, sino lanza excepcion
+            Category cat=Category.fromValue(category).orElseThrow(() -> new RuntimeException("Categoria Invalida"));
 
-            return functionRepository.findByCodeAndCategory(code,categoria);
+            return functionRepository.findByCodeAndCategory(code, cat);
+
+        } else if (code!=null) {
+            return functionRepository.findByCode(code);
+
+        } else if (category!=null) {
+            Category category1 = Category.fromValue(category).orElseThrow(() -> new RuntimeException("Categoria Invalida"));
+            return functionRepository.findByCategory(category1);
 
         }
+        //En caso de que no se encuentre coincidencias retorna una lista vacia
+        return List.of();
     }
 
 
 
     @Override
-    public boolean eliminarFuncion(String code) {
+    public Optional<Function> getFunctionById(String code) {
+        return this.functionRepository.findById(code);
+    }
+
+    @Override
+    public Function createFunction(Function function) {
+        return this.functionRepository.save(function);
+    }
+
+    @Override
+    public Optional<Function> updateFunction(String code, Function function) {
+        return this.functionRepository.findById(code).map(funcionEncontrada ->{
+            funcionEncontrada .setName(funcionEncontrada.getName());
+            funcionEncontrada.setCategory(funcionEncontrada.getCategory());
+
+            return functionRepository.save(funcionEncontrada);
+        });
+    }
+
+    @Override
+    public boolean deleteFunction(String code) {
         if (functionRepository.existsById(code)) {
             functionRepository.deleteById(code);
             return true;
         }
         return false;
-    }
-
-    @Override
-    public Optional<Function> obtenerFuncionPorId(String code) {
-        return this.functionRepository.findById(code);
-    }
-
-    @Override
-    public Function crearFuncion(Function function) {
-        return this.functionRepository.save(function);
-    }
-
-    @Override
-    public Optional<Function> actualizarFuncion(String code, Function function) {
-        return this.functionRepository.findById(code).map(funcionEncontrada ->{
-            funcionEncontrada .setName(funcionEncontrada.getName());
-            //REVISAR QUE MAS SE PUEDE ACTUALIZAR
-
-            return functionRepository.save(funcionEncontrada);
-        });
     }
 }
