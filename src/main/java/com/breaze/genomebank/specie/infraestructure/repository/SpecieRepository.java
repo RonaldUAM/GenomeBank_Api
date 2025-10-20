@@ -11,7 +11,7 @@ import java.util.Optional;
  * Proporciona métodos para realizar operaciones CRUD y consultas personalizadas.
  */
 @Repository
-public interface SpecieRepository extends JpaRepository<Specie,Long> {
+public interface SpecieRepository extends JpaRepository<Specie,Integer> {
     
     /**
      * Busca una especie por su nombre científico.

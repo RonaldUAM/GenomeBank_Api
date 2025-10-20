@@ -41,7 +41,7 @@ public class SpecieService implements ISpecieService {
      * @throws RuntimeException si no se encuentra la especie
      */
     @Override
-    public SpecieOutDTO getSpecieById(Long id)
+    public SpecieOutDTO getSpecieById(Integer id)
     {
         //Busca la especie por id y manda excepción si no existe
         Specie specie = specieRepository.findById(id)
@@ -92,7 +92,7 @@ public class SpecieService implements ISpecieService {
      * @throws RuntimeException si no se encuentra la especie o el nombre ya existe
      */
     @Override
-    public SpecieOutDTO updateSpecie(Long id, SpecieInDTO specieInDTO)
+    public SpecieOutDTO updateSpecie(Integer id, SpecieInDTO specieInDTO)
     {
         //Busca la especie a actualizar
         Specie specie = specieRepository.findById(id)
@@ -129,7 +129,7 @@ public class SpecieService implements ISpecieService {
      * @throws RuntimeException si no se encuentra la especie
      */
     @Override
-    public void deleteSpecie(Long id)
+    public void deleteSpecie(Integer id)
     {
         // Verifica que la especie exista
         if (!specieRepository.existsById(id))
