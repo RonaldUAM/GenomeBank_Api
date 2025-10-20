@@ -63,7 +63,7 @@ public class SpecieController
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<ApiResponse<SpecieOutDTO>> getSpecieById(@PathVariable Long id)
+    public ResponseEntity<ApiResponse<SpecieOutDTO>> getSpecieById(@PathVariable Integer id)
     {
         try
         {
@@ -128,7 +128,7 @@ public class SpecieController
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<SpecieOutDTO>> updateSpecie(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @RequestBody SpecieInDTO specieInDTO)
     {
         try
@@ -162,7 +162,7 @@ public class SpecieController
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Void>> deleteSpecie(@PathVariable Long id)
+    public ResponseEntity<ApiResponse<Void>> deleteSpecie(@PathVariable Integer id)
     {
         try 
         {

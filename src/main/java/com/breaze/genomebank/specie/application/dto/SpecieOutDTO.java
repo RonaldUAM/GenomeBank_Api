@@ -22,7 +22,7 @@ public class SpecieOutDTO
     /**
      * id único de la especie
      */
-    private Long id;
+    private Integer id;
     
     /**
      * Nombre científico de la especie

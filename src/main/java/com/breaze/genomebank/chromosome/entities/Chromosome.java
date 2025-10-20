@@ -1,12 +1,14 @@
 package com.breaze.genomebank.chromosome.entities;
 
 import com.breaze.genomebank.gene.entities.Gene;
+import com.breaze.genomebank.genome.entities.Genome;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,7 +21,7 @@ import java.util.List;
 public class Chromosome {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -30,7 +32,12 @@ public class Chromosome {
     @Column(name = "sequence_adn")
     private String sequenceAdn;
 
-    @OneToMany
-    @JoinColumn(name = "id_chromosome", nullable = false)
-    private List<Gene> genes;
+    // Relación inversa: un cromosoma pertenece a un genoma
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_genome", nullable = false)
+    private Genome genome;
+
+    // Genes en este cromosoma
+    @OneToMany(mappedBy = "chromosome")
+    private List<Gene> genes = new ArrayList<>();
 }

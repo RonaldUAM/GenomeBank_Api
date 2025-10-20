@@ -22,7 +22,7 @@ public interface ISpecieService {
      * @return SpecieOutDTO con los datos de la especie
      * @throws RuntimeException si es que no se encuentra
      */
-    SpecieOutDTO getSpecieById(Long id);
+    SpecieOutDTO getSpecieById(Integer id);
     
     /**
      * Crea una nueva especie (solo para ADMIN).
@@ -39,12 +39,12 @@ public interface ISpecieService {
      * @return SpecieOutDTO con los datos actualizados
      * @throws RuntimeException si no se encuentra la especie
      */
-    SpecieOutDTO updateSpecie(Long id, SpecieInDTO specieInDTO);
+    SpecieOutDTO updateSpecie(Integer id, SpecieInDTO specieInDTO);
     
     /**
      * Elimina una especie y se eliminan en cascada todos sus genomas (solo para ADMIN).
      * @param id de la especie a eliminar
      * @throws RuntimeException si no se encuentra o no existe
      */
-    void deleteSpecie(Long id);
+    void deleteSpecie(Integer id);
 }
