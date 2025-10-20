@@ -1,9 +1,12 @@
 package com.breaze.genomebank.specie.application.dto;
 
+import com.breaze.genomebank.genome.application.dto.GenomeOutDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * Dto de salida para representar una especie y para enviar información al cliente.
@@ -35,4 +38,5 @@ public class SpecieOutDTO
      * Cantidad de genomas asociados a la especie
      */
     private Integer genomeCount;
+    private List<GenomeOutDto> genomes;
 }
