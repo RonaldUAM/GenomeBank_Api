@@ -98,9 +98,15 @@ public class SpecieService implements ISpecieService {
         Specie specie = specieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Especie no encontrada con ID: " + id));
         
+        //Valida que al menos un campo sea diferente
+        boolean scientificNameChanged = !specie.getScientificName().equals(specieInDTO.getScientificName());
+        boolean commonNameChanged = !specie.getCommonName().equals(specieInDTO.getCommonName());
+        if (!scientificNameChanged && !commonNameChanged) {
+            throw new RuntimeException("No se realizaron cambios. Los datos son idénticos a los actuales");
+        }
+        
         //Valida que el nuevo nombre científico no esté en uso por otra especie
-        if (!specie.getScientificName().equals(specieInDTO.getScientificName()) &&
-            specieRepository.existsByScientificName(specieInDTO.getScientificName())) {
+        if (scientificNameChanged && specieRepository.existsByScientificName(specieInDTO.getScientificName())) {
             throw new RuntimeException("Ya existe otra especie con el nombre científico: " + 
                 specieInDTO.getScientificName());
         }
