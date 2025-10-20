@@ -4,8 +4,11 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Category {
+    //(Biological Process)
     BP("bp"),
+    //(Molecular Function)
     MF("mf"),
+    // (Cellular Component)
     CC("cc");
 
     private final String value;
