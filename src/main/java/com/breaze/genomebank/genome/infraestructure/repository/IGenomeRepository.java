@@ -4,6 +4,9 @@ import com.breaze.genomebank.genome.entities.Genome;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface IGenomeRepository extends JpaRepository<Genome, Integer> {
+    List<Genome> findBySpecieId(Integer genomeId);
 }
