@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Category {
-    bp("bp"),
-    mf("mf"),
-    cc("cc");
+    BP("BP"),
+    MF("MF"),
+    CC("CC");
 
     private final String value;
 

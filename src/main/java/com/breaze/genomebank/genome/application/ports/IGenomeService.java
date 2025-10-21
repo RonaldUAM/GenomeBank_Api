@@ -10,4 +10,5 @@ public interface IGenomeService {
     GenomeOutDto getGenomeById(Integer genomeId);
     GenomeOutDto createGenome(GenomeInDto genomeInDto);
     void deleteGenomeById(Integer genomeId);
+    GenomeOutDto updateGenome(Integer idGenome, GenomeInDto genomeInDto);
 }

@@ -4,7 +4,6 @@ import com.breaze.genomebank.common.ApiResponse;
 import com.breaze.genomebank.genome.application.dto.GenomeInDto;
 import com.breaze.genomebank.genome.application.dto.GenomeOutDto;
 import com.breaze.genomebank.genome.application.ports.IGenomeService;
-import com.breaze.genomebank.specie.application.dto.SpecieOutDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +26,15 @@ public class GenomeController {
         List<GenomeOutDto> dtos = genomeService.findAllGenomeOrByGenomeId(specieId);
         return buildResponse(dtos);
     }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('User', 'Admin')")
+    public ResponseEntity<ApiResponse<List<GenomeOutDto>>> getAllGenome() {
+        List<GenomeOutDto> dtos = genomeService.findAllGenomeOrByGenomeId(null);
+        return buildResponse(dtos);
+    }
+
+
 
     private ResponseEntity<ApiResponse<List<GenomeOutDto>>> buildResponse(List<GenomeOutDto> dtos) {
         return new ResponseEntity<>(
@@ -102,6 +110,33 @@ public class GenomeController {
             //Otros errores que retornan un 500
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new ApiResponse<>("error", "Error al eliminar el genoma: " + e.getMessage(), null)
+            );
+        }
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<GenomeOutDto>> updateSpecie(
+            @PathVariable Integer id,
+            @RequestBody GenomeInDto genomeInDto)
+    {
+        try
+        {
+            GenomeOutDto updatedSOutDto = genomeService.updateGenome(id, genomeInDto);
+            //Retorna respuesta exitosa con los datos actualizados
+            return ResponseEntity.ok(
+                    new ApiResponse<>("success", "Genoma actualizada exitosamente", updatedSOutDto)
+            );
+        } catch (RuntimeException e) {
+            HttpStatus status = e.getMessage().contains("no encontrado") ?
+                    HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(status).body(
+                    new ApiResponse<>("error", e.getMessage(), null)
+            );
+        } catch (Exception e) {
+            //Otros errores que retornan un 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ApiResponse<>("error", "Error al actualizar el Genoma: " + e.getMessage(), null)
             );
         }
     }

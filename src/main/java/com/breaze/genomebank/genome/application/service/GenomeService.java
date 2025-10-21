@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -50,7 +49,7 @@ public class GenomeService implements IGenomeService {
                         .orElseThrow(() -> new EntityNotFoundException("Cromosoma no encontrado: " + id)))
                 .toList();
         Specie specie = specieRepository.findById(genomeInDto.getSpecieId()).
-                orElseThrow(() -> new EntityNotFoundException("Specie no encontrado: " + id));
+                orElseThrow(() -> new EntityNotFoundException("Specie no encontrado: " + genomeInDto.getSpecieId()));
         Genome genome = Genome.builder()
                 .specie(specie)
                 .chromosomes(chromosomes)
@@ -63,10 +62,21 @@ public class GenomeService implements IGenomeService {
         // Verifica que la especie exista
         if (!genomeRepository.existsById(genomeId))
         {
-            throw new RuntimeException("Genoma no encontrada con ID: " + id);
+            throw new RuntimeException("Genoma no encontrada con ID: " + genomeId);
         }
 
         // Elimina la especie (junto a sus genomas en cascada)
         genomeRepository.deleteById(genomeId);
+    }
+
+    @Override
+    public GenomeOutDto updateGenome(Integer idGenome, GenomeInDto genomeInDto) {
+        Genome genome = genomeRepository.findById(idGenome)
+                .map(genome1 -> {
+                    genome1.setId(idGenome);
+                    return genomeRepository.save(genome1);
+                })
+                .orElseThrow(() -> new RuntimeException("Genoma no encontrada con ID: " + idGenome));
+        return genomeMapper.toDto(genome);
     }
 }
